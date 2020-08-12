@@ -3,7 +3,7 @@
 MODE=$1
 
 function execNetwork(){
-  scripts/network.sh $1
+  scripts/network.sh "$@"
 }
 
 # notice: chaincode.sh running in cli container
@@ -39,7 +39,8 @@ fi
 
 case "$MODE" in
   "network")
-    execNetwork $2
+    shift
+    scripts/network.sh "$@"
     ;;
   "channel")
     execChannel $2

@@ -15,7 +15,19 @@ Fabric的官方案例提供了许多简单的chaincode，我们选择abstore作�
 - query，查询用户余额
 
 ## 启动网络
-拉取[fabric-cases](https://github.com/stephenwu2020/fabric-cases.git)，启动devnet，详情，请查看该项目的文档。
+- 启动执行:
+  ```
+	make new
+	```
+- 销毁执行:
+  ```
+	make destroy
+	```
+- 更详细的用法，查看builder.sh提供的命令:
+  ```
+	cd devnet
+	./builder.sh
+	```
    
 ## cli简要说明
 运行，查看帮助：
@@ -123,6 +135,3 @@ func Init() {
    ```
 
 以上就是fabric-sdk-go最基本的使用方法
-
-注：
-- 网络重建、证书文件修改之后，需要把cli下的wallet文件夹删除，它是根据上一次的证书文件创建的，无权访问新的网络

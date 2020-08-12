@@ -1,22 +1,6 @@
 #!/bin/bash
 
-MODE=$1
 . ./scripts/env.sh
-
-function help(){
-  echo "Usage: "
-  echo "  network.sh <cmd>"
-  echo "cmd: "
-  echo "  - crypto"
-  echo "  - ca"
-  echo "  - genesis"
-  echo "  - ccp"
-  echo "  - up"
-  echo "  - createChanTx"
-  echo "  - down"
-  echo "  - clear"
-  echo "  - default"
-}
 
 function genCrypto(){
   ${CRYPTOGEN} generate --config=./crypto-config.yaml --output="organizations"
@@ -62,6 +46,46 @@ function clear(){
   rm -rf pkg/mycc.tar.gz 
 }
 
+function help(){
+  echo "Usage: "
+  echo "  network.sh <cmd>"
+  echo "cmd: "
+  echo "  · crypto"
+  echo "  · ca"
+  echo "  · genesis"
+  echo "  · ccp"
+  echo "  · up"
+  echo "  · createChanTx"
+  echo "  · down"
+  echo "  · clear"
+  echo "  · default"
+  echo "flag:"
+  echo "  --ca: use fabric-ca"
+}
+
+# parse mode
+MODE=$1
+shift
+
+# default flags
+FALG_CA="false"
+
+# parse flags
+while [[ $# -ge 1 ]]; do
+  opt="$1"
+  case $opt in
+    --ca)
+      FALG_CA="true"
+      echo "enable fabric-ca"
+      ;;
+    *)
+      echo "unkonwn flag: $opt"
+      help
+      exit 1
+  esac
+  shift
+done
+
 case "$MODE" in
   "crypto")
     genCrypto
@@ -87,11 +111,14 @@ case "$MODE" in
   "clear")
     clear
     ;;
-   "default")
+  "default")
     clear
-    #genCrypto
-    genCryptoCA
-    genCCP
+    if [ $FALG_CA = "true" ]; then
+      genCryptoCA
+      genCCP
+    else
+      genCrypto
+    fi
     genGenesis
     createChanTx
     up
