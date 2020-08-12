@@ -15,6 +15,7 @@ import (
 // SmartContract provides functions for managing a car
 type SmartContract struct {
 	contractapi.Contract
+	counter Counter
 }
 
 // Car describes basic details of what makes up a car
@@ -34,16 +35,16 @@ type QueryResult struct {
 // InitLedger adds a base set of cars to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	cars := []Car{
-		Car{Make: "Toyota", Model: "Prius", Colour: "blue", Owner: "Tomoko"},
-		Car{Make: "Ford", Model: "Mustang", Colour: "red", Owner: "Brad"},
-		Car{Make: "Hyundai", Model: "Tucson", Colour: "green", Owner: "Jin Soo"},
-		Car{Make: "Volkswagen", Model: "Passat", Colour: "yellow", Owner: "Max"},
-		Car{Make: "Tesla", Model: "S", Colour: "black", Owner: "Adriana"},
-		Car{Make: "Peugeot", Model: "205", Colour: "purple", Owner: "Michel"},
-		Car{Make: "Chery", Model: "S22L", Colour: "white", Owner: "Aarav"},
-		Car{Make: "Fiat", Model: "Punto", Colour: "violet", Owner: "Pari"},
-		Car{Make: "Tata", Model: "Nano", Colour: "indigo", Owner: "Valeria"},
-		Car{Make: "Holden", Model: "Barina", Colour: "brown", Owner: "Shotaro"},
+		{Make: "Toyota", Model: "Prius", Colour: "blue", Owner: "Tomoko"},
+		{Make: "Ford", Model: "Mustang", Colour: "red", Owner: "Brad"},
+		{Make: "Hyundai", Model: "Tucson", Colour: "green", Owner: "Jin Soo"},
+		{Make: "Volkswagen", Model: "Passat", Colour: "yellow", Owner: "Max"},
+		{Make: "Tesla", Model: "S", Colour: "black", Owner: "Adriana"},
+		{Make: "Peugeot", Model: "205", Colour: "purple", Owner: "Michel"},
+		{Make: "Chery", Model: "S22L", Colour: "white", Owner: "Aarav"},
+		{Make: "Fiat", Model: "Punto", Colour: "violet", Owner: "Pari"},
+		{Make: "Tata", Model: "Nano", Colour: "indigo", Owner: "Valeria"},
+		{Make: "Holden", Model: "Barina", Colour: "brown", Owner: "Shotaro"},
 	}
 
 	for i, car := range cars {
@@ -55,11 +56,14 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 		}
 	}
 
+	s.counter = Counter{}
+	s.counter.Init(ctx, uint(len(cars)))
+
 	return nil
 }
 
 // CreateCar adds a new car to the world state with given details
-func (s *SmartContract) CreateCar(ctx contractapi.TransactionContextInterface, carNumber string, make string, model string, colour string, owner string) error {
+func (s *SmartContract) CreateCar(ctx contractapi.TransactionContextInterface, make string, model string, colour string, owner string) error {
 	car := Car{
 		Make:   make,
 		Model:  model,
@@ -68,6 +72,8 @@ func (s *SmartContract) CreateCar(ctx contractapi.TransactionContextInterface, c
 	}
 
 	carAsBytes, _ := json.Marshal(car)
+	id := s.counter.GetID(ctx)
+	carNumber := "CAR" + strconv.Itoa(int(id))
 
 	return ctx.GetStub().PutState(carNumber, carAsBytes)
 }

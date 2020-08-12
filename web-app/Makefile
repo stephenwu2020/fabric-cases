@@ -10,6 +10,15 @@ new:
 		--cci '{"Args":["InitLedger"]}' \
 		--ccq '{"Args":["queryAllCars"]}'
 
+.PHONY: upgradeCC
+upgradeCC:
+	@cd ../devnet \
+	&& ./builder.sh chaincode upgrade \
+		--ccp /opt/gopath/src/github.com/hyperledger/chaincode/fabcar/go \
+		--ccl fabcar \
+		--cci '{"Args":["InitLedger"]}' \
+		--ccq '{"Args":["queryAllCars"]}'
+
 .PHONY: destroy
 destroy:
 	@rm -rf server/wallet
