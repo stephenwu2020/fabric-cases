@@ -16,6 +16,7 @@ function execChannel(){
   docker exec cli scripts/channel.sh $1
 }
 
+# help 
 function help(){
   echo "Usage: "
   echo "  ./builder.sh <cmd>"
@@ -28,6 +29,13 @@ function help(){
   echo "  - channel"
   echo "  - chaincode"
 }
+
+# check binary
+
+if [ ! -e "../bin/configtxgen" ] || [ ! -e "../bin/cryptogen" ] || [ ! -e "../config/core.yaml" ]; then
+  echo "Please check README.md, run make, make sure fabric tools and configs downloaded first!"
+  exit 1
+fi
 
 case "$MODE" in
   "network")
