@@ -11,7 +11,7 @@ function help(){
   echo "  - join"
   echo "  - anchor"
   echo "  - info"
-  echo "  - custom"
+  echo "  - default"
 }
 
 function createChan(){
@@ -76,7 +76,7 @@ elif [ "$MODE" == "anchor" ]; then
   setAnchor
 elif [ "$MODE" == "info" ]; then
   showChanInfo
-elif [ "$MODE" == "custom" ]; then
+elif [ "$MODE" == "default" ]; then
   wait 5
   createChan
   wait 5

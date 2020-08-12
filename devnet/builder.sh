@@ -48,9 +48,9 @@ case "$MODE" in
     execChaincode $2
     ;;
   "new")
-    ./builder.sh network custom
-    ./builder.sh channel custom
-    ./builder.sh chaincode custom
+    ./builder.sh network default
+    ./builder.sh channel default
+    ./builder.sh chaincode default
     ;;
   "destroy")
     ./builder.sh network clear

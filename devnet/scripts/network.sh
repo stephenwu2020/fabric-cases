@@ -15,7 +15,7 @@ function help(){
   echo "  - createChanTx"
   echo "  - down"
   echo "  - clear"
-  echo "  - custom"
+  echo "  - default"
 }
 
 function genCrypto(){
@@ -87,7 +87,7 @@ case "$MODE" in
   "clear")
     clear
     ;;
-   "custom")
+   "default")
     clear
     #genCrypto
     genCryptoCA

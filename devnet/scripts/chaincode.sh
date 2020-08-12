@@ -168,7 +168,7 @@ function help(){
   echo "  - query"
   echo "  - upgrade"
   echo "  - debug"
-  echo "  - custom"
+  echo "  - default"
 }
 
 case "$MODE" in
@@ -202,7 +202,7 @@ case "$MODE" in
   "debug")
     debug
     ;;
-  "custom")
+  "default")
     package
     install
     approve
