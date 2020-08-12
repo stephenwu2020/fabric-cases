@@ -1,0 +1,55 @@
+---
+name: develop-network-org${ORG}
+version: 1.0.0
+client:
+  organization: Org${ORG}
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  Org${ORG}:
+    mspid: Org${ORG}MSP
+    peers:
+    - peer0.org${ORG}.develop.com
+    certificateAuthorities:
+    - ca.org${ORG}.develop.com
+entityMatchers:
+  orderer:
+    - pattern: (\w+).develop.(\w+)
+      urlSubstitutionExp: localhost:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.develop.com
+      mappedHost: orderer.develop.com
+
+    - pattern: (\w+).develop.(\w+):(\d+)
+      urlSubstitutionExp: localhost:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.develop.com
+      mappedHost: orderer.develop.com
+orderers:
+  orderer.develop.com:
+    url: grpcs://localhost:${ORDERER_PORT}
+    tlsCACerts:
+      pem: |
+          ${ORDERER_PEM}
+    grpcOptions:
+      ssl-target-name-override: orderer.develop.com
+      hostnameOverride: orderer.develop.com
+peers:
+  peer0.org${ORG}.develop.com:
+    url: grpcs://localhost:${P0PORT}
+    tlsCACerts:
+      pem: |
+          ${PEERPEM}
+    grpcOptions:
+      ssl-target-name-override: peer0.org${ORG}.develop.com
+      hostnameOverride: peer0.org${ORG}.develop.com
+certificateAuthorities:
+  ca.org${ORG}.develop.com:
+    url: https://localhost:${CAPORT}
+    caName: ca-org${ORG}
+    tlsCACerts:
+      pem: 
+        - |
+          ${CAPEM}
+    httpOptions:
+      verify: false

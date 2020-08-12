@@ -1,0 +1,17 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: develop.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - localhost
+
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.develop.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 2
