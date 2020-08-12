@@ -5,7 +5,7 @@ Hyperledger Fabric是什么？如何安装部署？基于它开发什么类型�
 - 使用fabric-sdk-go开发cli应用
 
 详情访问: 
-- [fabric-cases官方教程](https://stephenwu2020.github.io/blackperl/#/fabric?id=101)
+- [fabric-cases官方教程](https://stephenwu2020.github.io/blackperl/#/fabric?id=201)
 - 各个子目录的README.md
 
 使用之前:
