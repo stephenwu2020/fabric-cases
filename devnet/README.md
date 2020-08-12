@@ -19,22 +19,58 @@
 3. 修改chaincode之后，用peer chaincode upgrade升级，而不是重新安装
 4. 只需要一个orderer节点，一个peer节点，简化网络架构
 
-# 解释本网络
-## 目录结构解释
-首先运行Makefile，下载fabric的工具，拉取fabric镜像:
+# 解释devnet网络
+首先拉取[fabric-cases]()的源码，在根目录执行
 ```
 make
 ```
 脚本运行成功之后，生成了两个目录：
 1. bin: 工具bin文件
 2. config: 配置文件
+同时拉取了fabric的镜像，执行
+```
+docker ps
+```
+确认fabric v2.2和fabric-ca v1.4.7的镜像在本地
+```
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+hyperledger/fabric-tools     2.2                 5eb2356665e7        4 weeks ago         519MB
+hyperledger/fabric-tools     2.2.0               5eb2356665e7        4 weeks ago         519MB
+hyperledger/fabric-tools     latest              5eb2356665e7        4 weeks ago         519MB
+hyperledger/fabric-peer      2.2                 760f304a3282        4 weeks ago         54.9MB
+hyperledger/fabric-peer      2.2.0               760f304a3282        4 weeks ago         54.9MB
+hyperledger/fabric-peer      latest              760f304a3282        4 weeks ago         54.9MB
+hyperledger/fabric-orderer   2.2                 5fb8e97da88d        4 weeks ago         38.4MB
+hyperledger/fabric-orderer   2.2.0               5fb8e97da88d        4 weeks ago         38.4MB
+hyperledger/fabric-orderer   latest              5fb8e97da88d        4 weeks ago         38.4MB
+hyperledger/fabric-ccenv     2.2                 aac435a5d3f1        4 weeks ago         586MB
+hyperledger/fabric-ccenv     2.2.0               aac435a5d3f1        4 weeks ago         586MB
+hyperledger/fabric-ccenv     latest              aac435a5d3f1        4 weeks ago         586MB
+hyperledger/fabric-baseos    2.2                 aa2bdf8013af        4 weeks ago         6.85MB
+hyperledger/fabric-baseos    2.2.0               aa2bdf8013af        4 weeks ago         6.85MB
+hyperledger/fabric-baseos    latest              aa2bdf8013af        4 weeks ago         6.85MB
+hyperledger/fabric-nodeenv   2.2                 ab88fe4d29dd        5 weeks ago         293MB
+hyperledger/fabric-nodeenv   2.2.0               ab88fe4d29dd        5 weeks ago         293MB
+hyperledger/fabric-nodeenv   latest              ab88fe4d29dd        5 weeks ago         293MB
+hyperledger/fabric-javaenv   2.2                 56c30f316b23        5 weeks ago         504MB
+hyperledger/fabric-javaenv   2.2.0               56c30f316b23        5 weeks ago         504MB
+hyperledger/fabric-javaenv   latest              56c30f316b23        5 weeks ago         504MB
+hyperledger/fabric-ca        1.4                 743a758fae29        2 months ago        154MB
+hyperledger/fabric-ca        1.4.7               743a758fae29        2 months ago        154MB
+hyperledger/fabric-ca        latest              743a758fae29        2 months ago        154MB
+```
 
-其他目录分别有：
-1. chaincode: 链码文件
-2. pkg:链码打包后存放的目录
-3. productions: peer和orderer数据存放目录
-4. scripts: 网络部署，channel设置，chaincode安装等工具脚本
-5. builder.sh: 网络部署的cli工具
+
+## 目录结构解释
+进入devnet:
+```
+cd devnet
+```
+主要目录有：
+1. pkg:链码打包后存放的目录
+2. productions: peer和orderer数据存放目录
+3. scripts: 网络部署，channel设置，chaincode安装等工具脚本
+4. builder.sh: 网络部署的cli工具
 
 ## 如何解决test-network存在的问题
 第一，节点的数据存放在本地，容器重启后，数据还在，其中主要的设置在docker-compose.yaml文件中：
