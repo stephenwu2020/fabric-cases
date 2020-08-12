@@ -3,6 +3,7 @@ Hyperledger Fabric是什么？如何安装部署？基于它开发什么类型�
 当前的案例有:
 - 部署开发网络
 - 使用fabric-sdk-go开发cli应用
+- 开发web应用
 
 详情访问: 
 - [fabric-cases官方教程](https://stephenwu2020.github.io/blackperl/#/fabric?id=201)
