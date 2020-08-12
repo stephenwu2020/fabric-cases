@@ -4,7 +4,7 @@
 Fabric的官方案例提供了许多简单的chaincode，我们选择abstore作为本次示例，结合fabric-sdk-go，开发一款简单的cli应用。
 
 ## 技术概要
-1. 使用[hf-devnet](https://github.com/stephenwu2020/hf-devnet.git)提供的网络，默认部署了abstore
+1. 使用[devnet](https://github.com/stephenwu2020/fabric-cases/tree/master/devnet)提供的网络，默认部署了abstore
 2. sdk选用go的版本
 3. cli的框架选用[cobra](github.com/spf13/cobra)
 
@@ -15,22 +15,12 @@ Fabric的官方案例提供了许多简单的chaincode，我们选择abstore作�
 - query，查询用户余额
 
 ## 启动网络
-1. 拉取[hf-devnet](https://github.com/stephenwu2020/hf-devnet.git)至本地的fixture目录:
-   ```
-   make pull-devnet
-   ```
-2. hf-devnet提供了最基本的网络架构，启动hf-devnet:
-   ```
-   cd fixture
-   make
-   ./builder.sh new
-   ```
-   关于hf-devnet的详情，请查看该项目的文档。
+拉取[fabric-cases](https://github.com/stephenwu2020/fabric-cases.git)，启动devnet，详情，请查看该项目的文档。
    
 ## cli简要说明
 运行，查看帮助：
 ```
-$ cd cli
+$ cd cli-app
 $ go run .
 Simple abstore cli app
 
@@ -65,7 +55,7 @@ Balance is: 90
 ```
 
 ## 关于fabric-go-sdk的使用
-hf-devenet使用fabric-ca的形式启动，同时创建了用于连接fabric的配置文件:organizations/peerOrganizations/org1.develop.com/connection-org1.yaml
+devenet使用fabric-ca的形式启动，同时创建了用于连接fabric的配置文件:organizations/peerOrganizations/org1.develop.com/connection-org1.yaml
 
 cli/sdk/sdk.go文件中可以看到，sdk启动时，读取该文件，创建钱包，创建channel网络的对象，创建对应chaincode对象：
 ```
@@ -136,4 +126,3 @@ func Init() {
 
 注：
 - 网络重建、证书文件修改之后，需要把cli下的wallet文件夹删除，它是根据上一次的证书文件创建的，无权访问新的网络
-- 本项目的源码位于[hf-simple-app](https://github.com/stephenwu2020/hf-simple-app)

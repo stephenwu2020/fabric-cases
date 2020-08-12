@@ -20,7 +20,7 @@
 4. 只需要一个orderer节点，一个peer节点，简化网络架构
 
 # 解释devnet网络
-首先拉取[fabric-cases]()的源码，在根目录执行
+首先拉取[fabric-cases](https://github.com/stephenwu2020/fabric-cases.git)的源码，在根目录执行
 ```
 make
 ```
