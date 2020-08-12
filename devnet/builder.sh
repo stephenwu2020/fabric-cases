@@ -2,20 +2,6 @@
 
 MODE=$1
 
-function execNetwork(){
-  scripts/network.sh "$@"
-}
-
-# notice: chaincode.sh running in cli container
-function execChaincode(){
-  docker exec cli scripts/chaincode.sh $1
-}
-
-# notice: chaincode.sh running in cli container
-function execChannel(){
-  docker exec cli scripts/channel.sh $1
-}
-
 # help 
 function help(){
   echo "Usage: "
@@ -43,10 +29,12 @@ case "$MODE" in
     scripts/network.sh "$@"
     ;;
   "channel")
-    execChannel $2
+    shift 
+    docker exec cli scripts/channel.sh "$@"
     ;;
   "chaincode")
-    execChaincode $2
+    shift
+    docker exec cli scripts/chaincode.sh "$@"
     ;;
   "new")
     ./builder.sh network default

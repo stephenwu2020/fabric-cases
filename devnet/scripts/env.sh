@@ -12,6 +12,9 @@ CHANNEL_NAME="c1"
 CHAINCODE_NAME="mycc"
 CHAINCODE_VERSION="1.0.0"
 CHAINCODE_LABEL="abstore"
+CHAINCODE_PATH="/opt/gopath/src/github.com/hyperledger/chaincode/abstore/go"
+CHAINCODE_INVOKE_OPTIONS='{"Args":["Init","a","100","b","100"]}'
+CHAINCODE_QUERY_OPTIONS='{"Args":["query","a"]}'
 SEQUENCE=1
 FABRIC_CFG_PATH="/etc/hyperledger/fabric"
 

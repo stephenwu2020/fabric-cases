@@ -1,6 +1,5 @@
 #!/bin/bash
 
-MODE=$1
 . ./scripts/env.sh
 
 function package(){
@@ -8,13 +7,13 @@ function package(){
     echo "pkg already exist"
   else
     echo "fetch go dependency"
-    pushd /opt/gopath/src/github.com/hyperledger/chaincode/abstore/go
+    pushd ${CHAINCODE_PATH}
     GO111MODULE=on go mod vendor
     popd
 
     echo "package chaincode"
     peer lifecycle chaincode package ${CHAINCODE_NAME}.tar.gz \
-      --path /opt/gopath/src/github.com/hyperledger/chaincode/abstore/go \
+      --path ${CHAINCODE_PATH} \
       --lang golang \
       --label ${CHAINCODE_LABEL}_1
 
@@ -97,12 +96,12 @@ function invoke(){
     -n ${CHAINCODE_NAME} \
     --peerAddresses peer0.org1.develop.com:7051 \
     --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.develop.com/peers/peer0.org1.develop.com/tls/ca.crt \
-    -c '{"Args":["Init","a","100","b","100"]}' \
+    -c ${CHAINCODE_INVOKE_OPTIONS} \
     --waitForEvent
 }
 
 function query(){
-  peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c '{"Args":["query","a"]}'
+  peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c ${CHAINCODE_QUERY_OPTIONS}
 }
 
 function upgrade(){
@@ -158,18 +157,60 @@ function help(){
   echo "Usage: "
   echo "  chaincode.sh <cmd>"
   echo "cmd: "
-  echo "  - package"
-  echo "  - install"
-  echo "  - approve"
-  echo "  - beforeCommit"
-  echo "  - commit"
-  echo "  - queryCommit"
-  echo "  - invoke"
-  echo "  - query"
-  echo "  - upgrade"
-  echo "  - debug"
-  echo "  - default"
+  echo "  · package"
+  echo "  · install"
+  echo "  · approve"
+  echo "  · beforeCommit"
+  echo "  · commit"
+  echo "  · queryCommit"
+  echo "  · invoke"
+  echo "  · query"
+  echo "  · upgrade"
+  echo "  · debug"
+  echo "  · default"
+  echo "flag: "
+  echo "  --ccn: chaincode name"
+  echo "  --ccp: chaincode path"
+  echo "  --ccl: chaincode label"
+  echo "  --cci: invoke options"
+  echo "  --ccq: query options"
 }
+
+# parse mode
+MODE=$1
+shift
+
+# parse flags
+while [[ $# -ge 1 ]]; do
+  opt="$1"
+  case $opt in
+    --ccn)
+      CHAINCODE_NAME="$2"
+      shift
+      ;;
+    --ccp)
+      CHAINCODE_PATH="$2"
+      shift
+      ;;
+    --ccl)
+      CHAINCODE_LABEL="$2"
+      shift
+      ;;
+    --cci)
+      CHAINCODE_INVOKE_OPTIONS="$2"
+      shift
+      ;;
+    --ccq)
+      CHAINCODE_QUERY_OPTIONS="$2"
+      shift
+      ;;
+    *)
+      echo "unkonwn flag: $opt"
+      help
+      exit 1
+  esac
+  shift
+done
 
 case "$MODE" in
   "package")
