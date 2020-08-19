@@ -10,15 +10,15 @@
 
 ## 启动
 1. 启动网络
-   ```
-   cd web-app
-   make
-   ```
+    ```
+    cd web-app
+    make
+    ```
 2. 启动 Web Server
-  ```
-  cd web-app/server
-  go run .
-  ```
+    ```
+    cd web-app/server
+    go run .
+    ```
 3. 访问 Web App: localhost:8000
 
 ## 功能
