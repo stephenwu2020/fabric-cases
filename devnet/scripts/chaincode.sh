@@ -9,6 +9,10 @@ function package(){
     echo "fetch go dependency"
     pushd ${CHAINCODE_PATH}
     GO111MODULE=on go mod vendor
+    if [ ! $? -eq 0 ]; then
+      echo "Fetch go dependency fail! Check your network please!"
+      exit 1
+    fi
     popd
 
     echo "package chaincode"
