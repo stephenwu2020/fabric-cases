@@ -9,17 +9,18 @@
 5. 前端的App采取Vue
 
 ## 启动
-1. 启动网络
+1. 拉取[fabric-cases](https://github.com/stephenwu2020/fabric-cases)
+2. 启动网络
     ```
     cd web-app
     make
     ```
-2. 启动 Web Server
+3. 启动 Web Server
     ```
     cd web-app/server
     go run .
     ```
-3. 访问 Web App: localhost:8000
+4. 访问 Web App: localhost:8000
 
 ## 功能
 1. 打开首页，查询所有的car的信息
