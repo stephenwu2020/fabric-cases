@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style>
+<style >
 html,body{
   padding: 0;
   margin: 0;
@@ -29,5 +29,9 @@ html,body{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  
+}
+::-webkit-scrollbar{ 
+  width:0px;
 }
 </style>

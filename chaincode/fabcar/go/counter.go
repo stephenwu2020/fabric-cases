@@ -26,10 +26,10 @@ func (c *Counter) GetID(ctx contractapi.TransactionContextInterface) uint {
 	return counterID.ID
 }
 
-func (c *Counter) Increment(ctx contractapi.TransactionContextInterface) {
+func (c *Counter) Increase(ctx contractapi.TransactionContextInterface) error {
 	id := c.GetID(ctx)
 	id = id + 1
 	newCounterId := CounterID{ID: id}
 	bytes, _ := json.Marshal(&newCounterId)
-	ctx.GetStub().PutState(key, bytes)
+	return ctx.GetStub().PutState(key, bytes)
 }

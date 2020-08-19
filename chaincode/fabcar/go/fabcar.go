@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"github.com/pkg/errors"
 )
 
 // SmartContract provides functions for managing a car
@@ -75,7 +76,13 @@ func (s *SmartContract) CreateCar(ctx contractapi.TransactionContextInterface, m
 	id := s.counter.GetID(ctx)
 	carNumber := "CAR" + strconv.Itoa(int(id))
 
-	return ctx.GetStub().PutState(carNumber, carAsBytes)
+	if err := ctx.GetStub().PutState(carNumber, carAsBytes); err != nil {
+		return errors.WithMessage(err, "CreateCar store failed")
+	}
+	if err := s.counter.Increase(ctx); err != nil {
+		return errors.WithMessage(err, "CreateCar increase  failed")
+	}
+	return nil
 }
 
 // QueryCar returns the car stored in the world state with given id

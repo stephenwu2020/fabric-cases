@@ -1,19 +1,23 @@
 <template>
   <div class="car">
-    <h1 class="car-head">Car Roster</h1>
+    <h2 class="car-head">CAR ROSTER</h2>
     <div class="car-list">
       <div class="car-item" v-for="item in carList" :key="item.Key">
         <img :src="carImgMap[item.Record.model] || carImgTest" alt="" class="car-item__img">
         <div class="car-item-intro">
-          <span class="car-item-intro__label">Model: {{item.Record.model}}</span>
-          <span class="car-item-intro__label">Make: {{item.Record.make}}</span>
-          <span class="car-item-intro__label">Colour: {{item.Record.colour}}</span>
-          <span class="car-item-intro__label">Owner: {{item.Record.owner}}</span>
+          <div>
+            <span class="car-item-intro__label">Model: {{item.Record.model}}</span>
+            <span class="car-item-intro__label">Make: {{item.Record.make}}</span>
+          </div>
+          <div>
+            <span class="car-item-intro__label">Colour: {{item.Record.colour}}</span>
+            <span class="car-item-intro__label">Owner: {{item.Record.owner}}</span>
+          </div>
         </div>
       </div>
     </div>
-    <el-button class="car-add" type="primary" icon="el-icon-plus" circle @click="onBtnAdd"></el-button>
-    <Add ref="add" @addEvent="queryAllCars"/>
+    <el-button class="car-add" type="info" icon="el-icon-plus" circle @click="onBtnAdd"></el-button>
+    <Add ref="add"  @addEvent="queryAllCars"/>
   </div>
 </template>
 
@@ -29,15 +33,15 @@ export default {
   computed: {
     carImgMap(){
       return {
-        Prius: require("@/assets/cars/Prius2.jpeg"),
+        Prius: require("@/assets/cars/Prius.png"),
         Mustang: require("@/assets/cars/Mustang.png"),
-        Tucson: require("@/assets/cars/Tucson.jpeg"),
+        Tucson: require("@/assets/cars/Tucson.png"),
         Passat: require("@/assets/cars/Passat.png"),
-        S: require("@/assets/cars/ModelS.jpg"),
+        S: require("@/assets/cars/ModelS.png"),
         205: require("@/assets/cars/205.png"),
-        S22L: require("@/assets/cars/S22L.jpg"),
-        Punto: require("@/assets/cars/Punto.jpeg"),
-        Nano: require("@/assets/cars/Nano.jpg"),
+        S22L: require("@/assets/cars/S22L.png"),
+        Punto: require("@/assets/cars/Punto.png"),
+        Nano: require("@/assets/cars/Nano.png"),
         Barina: require("@/assets/cars/Barina.png"),
       }
     },
@@ -70,25 +74,59 @@ export default {
 
 <style lang="postcss" scoped>
 .car{
+  position: relative;
+  &-head{
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px ;
+    margin: 0;
+    text-align: left;
+    background: #000;
+    color: #fff;
+  }
   &-list{
+    padding-top: 60px;
     margin: auto;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 0 5%;
+    flex-direction: column;
+    align-items: center;
   }
   &-item{
-    width: 500px;
-    padding: 20px;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: 60vh;
+    min-height: 500px;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     &__img{
-      width: 300px;
+      max-width: 50%;
     }
     &-intro{
-      flex: 1;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: center;
+      div{
+        min-width: 200px;
+        flex: 1;
+        display: flex;
+        span{
+          line-height: 50px;
+          text-align: center;
+          flex: 1;
+          color: #fff;
+          background: rgb(87, 86, 86);
+          font-weight: bold;
+        }
+      }
     }
   }
   &-add{
@@ -97,5 +135,14 @@ export default {
     bottom: 10%;
     font-size: 20px;
   }
+}
+@media screen and (max-width: 500px){
+.car{
+  &-item{
+    &__img{
+      max-width: 80%;
+    }
+  }
+}
 }
 </style>

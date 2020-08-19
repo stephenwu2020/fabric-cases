@@ -94,6 +94,7 @@ export default {
 .add {
   & >>> .el-dialog {
     width: 500px;
+    max-width: 100%;
   }
   & >>> .el-dialog__header{
     padding: 5px 30px;
