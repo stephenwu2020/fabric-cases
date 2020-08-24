@@ -20,8 +20,15 @@ type RosterContract struct {
 	personCounter *genid.PersonCounter
 }
 
+func NewRosterContract() *RosterContract {
+	counter := genid.NewPersonCounter()
+	return &RosterContract{
+		personCounter: counter,
+	}
+}
+
 func (r *RosterContract) Instantiate(ctx contractapi.TransactionContextInterface) error {
-	r.personCounter = genid.NewPersonCounter(ctx)
+	r.personCounter.Init(ctx)
 	return nil
 }
 

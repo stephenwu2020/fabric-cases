@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	chaincode, err := contractapi.NewChaincode(new(RosterContract))
+	rosterContract := NewRosterContract()
+	chaincode, err := contractapi.NewChaincode(rosterContract)
 
 	if err != nil {
 		fmt.Printf("Error create roster chaincode: %s", err.Error())

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"github.com/pkg/errors"
 )
 
 type PersonCounter struct {
@@ -15,7 +16,7 @@ type PersonCounter struct {
 	historyHead string
 }
 
-func NewPersonCounter(ctx contractapi.TransactionContextInterface) *PersonCounter {
+func NewPersonCounter() *PersonCounter {
 	p := &PersonCounter{
 		key:         "person_counter",
 		start:       uint64(1000),
@@ -23,15 +24,21 @@ func NewPersonCounter(ctx contractapi.TransactionContextInterface) *PersonCounte
 		historyHead: "history_",
 	}
 
-	var id uint64
-	couterRes, _ := ctx.GetStub().GetState(p.key)
-	if couterRes != nil {
-		id = binary.BigEndian.Uint64(couterRes)
-	} else {
-		id = p.start
-	}
-	p.count = id
 	return p
+}
+
+func (p *PersonCounter) Init(ctx contractapi.TransactionContextInterface) error {
+	couterRes, err := ctx.GetStub().GetState(p.key)
+	if err != nil {
+		return errors.WithMessage(err, "Get couter fail")
+	}
+
+	if couterRes != nil {
+		p.count = binary.BigEndian.Uint64(couterRes)
+	} else {
+		p.count = p.start
+	}
+	return nil
 }
 
 func (p *PersonCounter) GetPersonId() string {

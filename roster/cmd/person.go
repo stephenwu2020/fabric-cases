@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/stephenwu2020/fabric-cases/roster/sdk"
 
@@ -39,6 +38,9 @@ var personDelCmd = &cobra.Command{
 	Short: "Delete person",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Delete person with id:", personId)
+		if _, err := sdk.ChannelExecute("DelPerson", personId); err != nil {
+			fmt.Println("Delete person fail", err)
+		}
 	},
 }
 
@@ -58,12 +60,16 @@ var personSearchCmd = &cobra.Command{
 		res, err := sdk.ChannelQuery("SearchPerson", personName)
 		if err != nil {
 			log.Println("Search person error:", err)
-			os.Exit(1)
+			return
 		}
 		var persons []datatype.Person
 		if err := json.Unmarshal(res, &persons); err != nil {
 			fmt.Println("Search Person failed:", err)
-			os.Exit(1)
+			return
+		}
+		if len(persons) == 0 {
+			fmt.Println("Person not found.")
+			return
 		}
 		for i, person := range persons {
 			formater.PrintPerson(i, &person)
