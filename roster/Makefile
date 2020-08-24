@@ -7,7 +7,7 @@ CHAINCODE_QUERY_OPTION='{"Args":["Version"]}'
 new: 
 	@rm -rf ./wallet
 	@cd ../devnet \
-	&& ./builder.sh network default --ca \
+	&& ./builder.sh network default --ca --couch \
 	&& ./builder.sh channel default \
 	&& ./builder.sh chaincode default \
 		--ccp ${CHAINCODE_PATH} \

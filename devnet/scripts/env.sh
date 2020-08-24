@@ -6,6 +6,7 @@ CONFIGTXGEN=../bin/configtxgen
 FABRIC_CA_CLIENT=../bin/fabric-ca-client 
 COMPOSE_FILE_CA=./docker-compose-ca.yaml
 COMPOSE_FILE=./docker-compose.yaml
+COMPOSE_FILE_COUCH=./docker-compose-couch.yaml
 
 # network variables, used in cli container
 CHANNEL_NAME="c1"

@@ -32,11 +32,18 @@ function genCCP(){
 }
 
 function up(){
-  docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_CA up -d
+  Files="-f ${COMPOSE_FILE}"
+  if [ "${FLAG_CA}" == "true" ]; then
+    Files="${Files} -f ${COMPOSE_FILE_CA}"
+  fi
+  if [ "${FLAG_COUCH}" == "true" ]; then
+    Files="${Files} -f ${COMPOSE_FILE_COUCH}"
+  fi
+  docker-compose ${Files} up -d
 }
 
 function down(){
-  docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_CA down
+  docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_CA -f $COMPOSE_FILE_COUCH down
 }
 
 function clear(){
@@ -61,6 +68,7 @@ function help(){
   echo "  · default"
   echo "flag:"
   echo "  --ca: use fabric-ca"
+  echo "  --couch: use couch db"
 }
 
 # parse mode
@@ -68,15 +76,20 @@ MODE=$1
 shift
 
 # default flags
-FALG_CA="false"
+FLAG_CA="false"
+FLAG_COUCH="false"
 
 # parse flags
 while [[ $# -ge 1 ]]; do
   opt="$1"
   case $opt in
     --ca)
-      FALG_CA="true"
+      FLAG_CA="true"
       echo "enable fabric-ca"
+      ;;
+    --couch)
+      FLAG_COUCH="true"
+      echo "enable couch db"
       ;;
     *)
       echo "unkonwn flag: $opt"
@@ -113,7 +126,7 @@ case "$MODE" in
     ;;
   "default")
     clear
-    if [ $FALG_CA = "true" ]; then
+    if [ $FLAG_CA = "true" ]; then
       genCryptoCA
       genCCP
     else

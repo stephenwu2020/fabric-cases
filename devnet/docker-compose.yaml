@@ -1,7 +1,7 @@
 version: '2'
 
 networks:
-  basic:
+  devnet:
 
 services:
   orderer.develop.com:
@@ -36,14 +36,14 @@ services:
         - ./productions/orderer:/var/hyperledger/production/orderer
 
     networks:
-      - basic
+      - devnet
 
   peer0.org1.develop.com:
     container_name: peer0.org1.develop.com
     image: hyperledger/fabric-peer:$IMAGE_TAG
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_devnet
       - FABRIC_LOGGING_SPEC=$LOG_LEVEL
       # peer env
       - CORE_PEER_TLS_ENABLED=true
@@ -74,7 +74,7 @@ services:
         - ./organizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./productions/peer:/var/hyperledger/production
     networks:
-      - basic
+      - devnet
 
   cli:
     container_name: cli
@@ -106,4 +106,4 @@ services:
     depends_on:
       - orderer.develop.com
     networks:
-      - basic 
+      - devnet 
