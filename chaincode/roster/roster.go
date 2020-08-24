@@ -67,9 +67,22 @@ func (r *RosterContract) ModifyPerson(ctx contractapi.TransactionContextInterfac
 	if err := json.Unmarshal(bytes, &person); err != nil {
 		return errors.WithMessage(err, "Modify Person unmarshal failed")
 	}
+	uintAge, err := strconv.ParseUint(age, 10, 8)
+	if err != nil {
+		return errors.WithMessage(err, "Parse age faild")
+	}
+	uintGender, err := strconv.ParseUint(gender, 10, 8)
+	if err != nil {
+		return errors.WithMessage(err, "Parse gender faild")
+	}
+	intBirth, err := strconv.ParseInt(birth, 10, 64)
+	if err != nil {
+		return errors.WithMessage(err, "Parse brith faild")
+	}
 	person.Name = name
-	person.Age = 18
-	person.Gender = 2
+	person.Age = uint8(uintAge)
+	person.Gender = uint8(uintGender)
+	person.Birth = time.Unix(intBirth, 0)
 	person.BirthPlace = birthPlace
 	newBytes, _ := json.Marshal(&person)
 	if err := ctx.GetStub().PutState(person.Id, newBytes); err != nil {

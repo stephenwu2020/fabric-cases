@@ -49,9 +49,17 @@ var personModifyCmd = &cobra.Command{
 	Short: "Modify person info",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Modify person with id:", personId)
-		_, err := sdk.ChannelExecute("ModifyPerson", personId, "David", "20", "1", "1598262713", "US")
+		_, err := sdk.ChannelExecute(
+			"ModifyPerson",
+			personId,
+			"David",
+			"20",
+			"1",
+			"1598262713",
+			"US",
+		)
 		if err != nil {
-			log.Panicln("Modify Person fail", err)
+			log.Println("Modify Person fail", err)
 		}
 	},
 }
