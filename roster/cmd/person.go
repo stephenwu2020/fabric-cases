@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/stephenwu2020/fabric-cases/roster/sdk"
 
@@ -49,14 +50,24 @@ var personModifyCmd = &cobra.Command{
 	Short: "Modify person info",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Modify person with id:", personId)
-		_, err := sdk.ChannelExecute(
+		bytes, err := sdk.ChannelQuery("GetPersonById", personId)
+		if err != nil {
+			fmt.Println("Get Person fail")
+			return
+		}
+		person := &datatype.Person{}
+		if err := json.Unmarshal(bytes, person); err != nil {
+			fmt.Println("Unmarshal Person fail")
+			return
+		}
+		_, err = sdk.ChannelExecute(
 			"ModifyPerson",
 			personId,
-			"David",
-			"20",
-			"1",
-			"1598262713",
-			"US",
+			person.Name,
+			strconv.FormatUint(uint64(person.Age)+1, 10),
+			strconv.FormatUint(uint64(person.Gender), 10),
+			strconv.FormatInt(person.Birth.Unix(), 10),
+			person.BirthPlace,
 		)
 		if err != nil {
 			log.Println("Modify Person fail", err)

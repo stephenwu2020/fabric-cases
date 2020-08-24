@@ -65,19 +65,19 @@ func (r *RosterContract) ModifyPerson(ctx contractapi.TransactionContextInterfac
 	}
 	var person datatype.Person
 	if err := json.Unmarshal(bytes, &person); err != nil {
-		return errors.WithMessage(err, "Modify Person unmarshal failed")
+		return errors.WithMessage(err, "Modify Person unmarshal fail")
 	}
 	uintAge, err := strconv.ParseUint(age, 10, 8)
 	if err != nil {
-		return errors.WithMessage(err, "Parse age faild")
+		return errors.WithMessage(err, "Parse age fail")
 	}
 	uintGender, err := strconv.ParseUint(gender, 10, 8)
 	if err != nil {
-		return errors.WithMessage(err, "Parse gender faild")
+		return errors.WithMessage(err, "Parse gender fail")
 	}
 	intBirth, err := strconv.ParseInt(birth, 10, 64)
 	if err != nil {
-		return errors.WithMessage(err, "Parse brith faild")
+		return errors.WithMessage(err, "Parse brith fail")
 	}
 	person.Name = name
 	person.Age = uint8(uintAge)
@@ -116,6 +116,18 @@ func (r *RosterContract) SearchPerson(ctx contractapi.TransactionContextInterfac
 		persons = append(persons, person)
 	}
 	return persons, nil
+}
+
+func (r *RosterContract) GetPersonById(ctx contractapi.TransactionContextInterface, id string) (*datatype.Person, error) {
+	bytes, err := ctx.GetStub().GetState(id)
+	if err != nil {
+		return nil, errors.WithMessage(err, "Get person by id fail")
+	}
+	person := &datatype.Person{}
+	if err := json.Unmarshal(bytes, person); err != nil {
+		return nil, errors.WithMessage(err, "Marsha person fail")
+	}
+	return person, nil
 }
 
 /*
