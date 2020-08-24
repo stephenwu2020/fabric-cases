@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"stephenwu2020/fabric-cases/chaincode/roster/datatype"
-	"stephenwu2020/fabric-cases/chaincode/roster/genid"
+	"github.com/stephenwu2020/fabric-cases/chaincode/roster/datatype"
+	"github.com/stephenwu2020/fabric-cases/chaincode/roster/genid"
 	"strconv"
 	"time"
 

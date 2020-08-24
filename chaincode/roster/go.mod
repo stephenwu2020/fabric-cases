@@ -1,4 +1,4 @@
-module stephenwu2020/fabric-cases/chaincode/roster
+module github.com/stephenwu2020/fabric-cases/chaincode/roster
 
 go 1.14
 
