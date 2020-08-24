@@ -10,7 +10,7 @@ import (
 
 	"github.com/stephenwu2020/fabric-cases/roster/formater"
 
-	"github.com/stephenwu2020/fabric-cases/roster/datatype"
+	"github.com/stephenwu2020/fabric-cases/chaincode/roster/datatype"
 
 	"github.com/spf13/cobra"
 )

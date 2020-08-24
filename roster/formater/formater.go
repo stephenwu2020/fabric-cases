@@ -3,7 +3,7 @@ package formater
 import (
 	"fmt"
 
-	"github.com/stephenwu2020/fabric-cases/roster/datatype"
+	"github.com/stephenwu2020/fabric-cases/chaincode/roster/datatype"
 )
 
 func PrintPerson(index int, person *datatype.Person) {
