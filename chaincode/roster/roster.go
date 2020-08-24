@@ -44,6 +44,7 @@ func (r *RosterContract) AddPerson(ctx contractapi.TransactionContextInterface, 
 	person := &datatype.Person{
 		Id:        r.personCounter.GetPersonId(),
 		Name:      name,
+		Birth:     time.Now(),
 		GroupTags: []string{},
 		HistroyId: r.personCounter.GetHistoryId(),
 	}
@@ -57,7 +58,7 @@ func (r *RosterContract) AddPerson(ctx contractapi.TransactionContextInterface, 
 	return nil
 }
 
-func (r *RosterContract) ModifyPerson(ctx contractapi.TransactionContextInterface, id, name string, age, gender uint8, birth int64, birthPlace string) error {
+func (r *RosterContract) ModifyPerson(ctx contractapi.TransactionContextInterface, id, name, age, gender, birth, birthPlace string) error {
 	bytes, _ := ctx.GetStub().GetState(id)
 	if bytes == nil {
 		return errors.New("Modify Person failed, id not exist.")
@@ -67,9 +68,8 @@ func (r *RosterContract) ModifyPerson(ctx contractapi.TransactionContextInterfac
 		return errors.WithMessage(err, "Modify Person unmarshal failed")
 	}
 	person.Name = name
-	person.Age = age
-	person.Gender = gender
-	person.Birth = time.Unix(birth, 0)
+	person.Age = 18
+	person.Gender = 2
 	person.BirthPlace = birthPlace
 	newBytes, _ := json.Marshal(&person)
 	if err := ctx.GetStub().PutState(person.Id, newBytes); err != nil {
