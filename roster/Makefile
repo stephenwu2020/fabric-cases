@@ -28,3 +28,13 @@ upgradeCC:
 destroy:
 	@rm -rf ./wallet
 	@cd ../devnet && ./builder.sh destroy
+
+.PHONY: down
+down:
+	@cd ../devnet \
+	&& ./builder.sh network down
+
+.PHONY: up
+up:
+	@cd ../devnet \
+	&& ./builder.sh network up --ca --couch

@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stephenwu2020/fabric-cases/chaincode/roster/datatype"
-	"github.com/stephenwu2020/fabric-cases/chaincode/roster/genid"
 	"strconv"
 	"time"
+
+	"github.com/stephenwu2020/fabric-cases/chaincode/roster/datatype"
+	"github.com/stephenwu2020/fabric-cases/chaincode/roster/genid"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 	"github.com/pkg/errors"
@@ -81,7 +82,7 @@ func (r *RosterContract) SearchPerson(ctx contractapi.TransactionContextInterfac
 		return nil, err
 	}
 	defer queryResults.Close()
-	var persons []datatype.Person
+	persons := []datatype.Person{}
 	for queryResults.HasNext() {
 		var person datatype.Person
 		queryRsp, err := queryResults.Next()
