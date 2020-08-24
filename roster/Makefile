@@ -5,7 +5,7 @@ CHAINCODE_QUERY_OPTION='{"Args":["Version"]}'
 
 .PHONY: new
 new: 
-	@rm -rf server/wallet
+	@rm -rf ./wallet
 	@cd ../devnet \
 	&& ./builder.sh network default --ca \
 	&& ./builder.sh channel default \
@@ -26,5 +26,5 @@ upgradeCC:
 
 .PHONY: destroy
 destroy:
-	@rm -rf server/wallet
+	@rm -rf ./wallet
 	@cd ../devnet && ./builder.sh destroy
