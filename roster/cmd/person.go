@@ -27,8 +27,8 @@ var personAddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add person",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Add person with name:", personName)
-		if _, err := sdk.ChannelExecute("AddPerson", personName); err != nil {
+		fmt.Println("Add person with name:", argPersonName)
+		if _, err := sdk.ChannelExecute("AddPerson", argPersonName); err != nil {
 			fmt.Println("Add person error:", err)
 		}
 	},
@@ -38,8 +38,8 @@ var personDelCmd = &cobra.Command{
 	Use:   "del",
 	Short: "Delete person",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Delete person with id:", personId)
-		if _, err := sdk.ChannelExecute("DelPerson", personId); err != nil {
+		fmt.Println("Delete person with id:", argPersonId)
+		if _, err := sdk.ChannelExecute("DelPerson", argPersonId); err != nil {
 			fmt.Println("Delete person fail", err)
 		}
 	},
@@ -49,8 +49,8 @@ var personModifyCmd = &cobra.Command{
 	Use:   "modify",
 	Short: "Modify person info",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Modify person with id:", personId)
-		bytes, err := sdk.ChannelQuery("GetPersonById", personId)
+		fmt.Println("Modify person with id:", argPersonId)
+		bytes, err := sdk.ChannelQuery("GetPersonById", argPersonId)
 		if err != nil {
 			fmt.Println("Get Person fail")
 			return
@@ -60,14 +60,36 @@ var personModifyCmd = &cobra.Command{
 			fmt.Println("Unmarshal Person fail")
 			return
 		}
+
+		fname := person.Name
+		if argPersonName != "" {
+			fname = argPersonName
+		}
+		fage := person.Age
+		if argAge != 0 {
+			fage = argAge
+		}
+		fgender := person.Gender
+		if argGender != 0 {
+			fgender = argGender
+		}
+		fbirth := person.Birth.Unix()
+		if argBirth != 0 {
+			fbirth = argBirth
+		}
+		fplace := person.BirthPlace
+		if argBirthPlace != "" {
+			fplace = argBirthPlace
+		}
+
 		_, err = sdk.ChannelExecute(
 			"ModifyPerson",
-			personId,
-			person.Name,
-			strconv.FormatUint(uint64(person.Age)+1, 10),
-			strconv.FormatUint(uint64(person.Gender), 10),
-			strconv.FormatInt(person.Birth.Unix(), 10),
-			person.BirthPlace,
+			argPersonId,
+			fname,
+			strconv.FormatUint(uint64(fage), 10),
+			strconv.FormatUint(uint64(fgender), 10),
+			strconv.FormatInt(fbirth, 10),
+			fplace,
 		)
 		if err != nil {
 			log.Println("Modify Person fail", err)
@@ -79,8 +101,8 @@ var personSearchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Search person",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Search person by name:", personName)
-		res, err := sdk.ChannelQuery("SearchPerson", personName)
+		fmt.Println("Search person by name:", argPersonName)
+		res, err := sdk.ChannelQuery("SearchPerson", argPersonName)
 		if err != nil {
 			log.Println("Search person error:", err)
 			return
@@ -107,16 +129,21 @@ func init() {
 	personCmd.AddCommand(personModifyCmd)
 	personCmd.AddCommand(personSearchCmd)
 
-	personAddCmd.Flags().StringVarP(&personName, "name", "n", "", "person name")
+	personAddCmd.Flags().StringVarP(&argPersonName, "name", "n", "", "person name")
 	personAddCmd.MarkFlagRequired("name")
 
-	personDelCmd.Flags().StringVarP(&personId, "id", "", "", "person id")
+	personDelCmd.Flags().StringVarP(&argPersonId, "id", "", "", "person id")
 	personDelCmd.MarkFlagRequired("id")
 
-	personModifyCmd.Flags().StringVarP(&personId, "id", "", "", "person id")
+	personModifyCmd.Flags().StringVarP(&argPersonId, "id", "", "", "person id")
+	personModifyCmd.Flags().StringVarP(&argPersonName, "name", "n", "", "person name")
+	personModifyCmd.Flags().Uint8VarP(&argAge, "age", "a", 0, "age")
+	personModifyCmd.Flags().Uint8VarP(&argGender, "gender", "g", 0, "gender")
+	personModifyCmd.Flags().Int64VarP(&argBirth, "birth", "b", 0, "birth timestamp")
+	personModifyCmd.Flags().StringVarP(&argBirthPlace, "place", "p", "", "birth place")
 	personModifyCmd.MarkFlagRequired("id")
 
-	personSearchCmd.Flags().StringVarP(&personName, "name", "n", "", "person name")
+	personSearchCmd.Flags().StringVarP(&argPersonName, "name", "n", "", "person name")
 	personSearchCmd.MarkFlagRequired("name")
 
 }

@@ -26,7 +26,7 @@ var groupAddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a group tag",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Add a group tag:", groupTag)
+		fmt.Println("Add a group tag:", argGroupTag)
 	},
 }
 
@@ -34,7 +34,7 @@ var groupDelCmd = &cobra.Command{
 	Use:   "del",
 	Short: "Delete a group tag",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Delete a group tag:", groupTag)
+		fmt.Println("Delete a group tag:", argGroupTag)
 	},
 }
 
@@ -42,7 +42,7 @@ var groupAssignCmd = &cobra.Command{
 	Use:   "assign",
 	Short: "Assign a group tag to a person",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Assign a group tag: %s to person: %s\n", groupTag, personId)
+		fmt.Printf("Assign a group tag: %s to person: %s\n", argGroupTag, argPersonId)
 	},
 }
 
@@ -50,7 +50,7 @@ var groupRemoveCmd = &cobra.Command{
 	Use:   "remove",
 	Short: "Remove a group tag of person",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Remove a group tag: %s of person: %s\n", groupTag, personId)
+		fmt.Printf("Remove a group tag: %s of person: %s\n", argGroupTag, argPersonId)
 	},
 }
 
@@ -62,19 +62,19 @@ func init() {
 	groupCmd.AddCommand(groupAssignCmd)
 	groupCmd.AddCommand(groupRemoveCmd)
 
-	groupAddCmd.Flags().StringVarP(&groupTag, "tag", "t", "", "group tag")
+	groupAddCmd.Flags().StringVarP(&argGroupTag, "tag", "t", "", "group tag")
 	groupAddCmd.MarkFlagRequired("tag")
 
-	groupDelCmd.Flags().StringVarP(&groupTag, "tag", "t", "", "group tag")
+	groupDelCmd.Flags().StringVarP(&argGroupTag, "tag", "t", "", "group tag")
 	groupDelCmd.MarkFlagRequired("tag")
 
-	groupAssignCmd.Flags().StringVarP(&groupTag, "tag", "t", "", "group tag")
-	groupAssignCmd.Flags().StringVarP(&personId, "id", "", "", "person id")
+	groupAssignCmd.Flags().StringVarP(&argGroupTag, "tag", "t", "", "group tag")
+	groupAssignCmd.Flags().StringVarP(&argPersonId, "id", "", "", "person id")
 	groupAssignCmd.MarkFlagRequired("tag")
 	groupAssignCmd.MarkFlagRequired("id")
 
-	groupRemoveCmd.Flags().StringVarP(&groupTag, "tag", "t", "", "group tag")
-	groupRemoveCmd.Flags().StringVarP(&personId, "id", "", "", "person id")
+	groupRemoveCmd.Flags().StringVarP(&argGroupTag, "tag", "t", "", "group tag")
+	groupRemoveCmd.Flags().StringVarP(&argPersonId, "id", "", "", "person id")
 	groupRemoveCmd.MarkFlagRequired("tag")
 	groupRemoveCmd.MarkFlagRequired("id")
 }

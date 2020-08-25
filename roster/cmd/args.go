@@ -1,14 +1,15 @@
 package cmd
 
 var (
-	personName    string
-	personId      string
-	age           uint8
-	gender        uint8
-	birthPlace    string
-	historyId     string
-	recordId      string
-	recordContent string
-	recordComment string
-	groupTag      string
+	argPersonName    string
+	argPersonId      string
+	argAge           uint8
+	argGender        uint8
+	argBirth         int64
+	argBirthPlace    string
+	argHistoryId     string
+	argRecordId      string
+	argRecordContent string
+	argRecordComment string
+	argGroupTag      string
 )
