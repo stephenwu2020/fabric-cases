@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -59,6 +60,42 @@ var historyModifyCmd = &cobra.Command{
 	Short: "Modify record of history",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Modify record of history", argRecordId, argRecordContent, argRecordComment)
+		history, err := getHistoryByPersonId(argPersonId)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		rid, err := strconv.Atoi(argRecordId)
+		if err != nil {
+			fmt.Println("Parse record id fail")
+			return
+		}
+		if rid >= len(history.Records) {
+			fmt.Println("Record id out of range")
+			return
+		}
+		old := history.Records[rid]
+		fcontent := old.Content
+		if argRecordContent != "" {
+			fcontent = argRecordContent
+		}
+		fcomment := old.Comment
+		if argRecordComment != "" {
+			fcomment = argRecordComment
+		}
+
+		_, err = sdk.ChannelExecute(
+			"ModifyHistory",
+			history.Id,
+			argRecordId,
+			fcontent,
+			fcomment,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println("Modify record success.")
 	},
 }
 
@@ -74,10 +111,12 @@ func init() {
 	historyModifyCmd.MarkFlagRequired("id")
 	historyAddCmd.MarkFlagRequired("content")
 
-	historyModifyCmd.Flags().StringVarP(&argHistoryId, "id", "", "", "record's id")
+	historyModifyCmd.Flags().StringVarP(&argPersonId, "id", "", "", "person's id")
+	historyModifyCmd.Flags().StringVarP(&argRecordId, "rid", "", "", "record's id")
 	historyModifyCmd.Flags().StringVarP(&argRecordContent, "content", "c", "", "record's content")
 	historyModifyCmd.Flags().StringVarP(&argRecordComment, "comment", "C", "", "record's comment")
 	historyModifyCmd.MarkFlagRequired("id")
+	historyModifyCmd.MarkFlagRequired("rid")
 
 	historyShowCmd.Flags().StringVarP(&argPersonId, "id", "", "", "person id")
 	historyShowCmd.MarkFlagRequired("id")

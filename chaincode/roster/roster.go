@@ -172,3 +172,29 @@ func (r *RosterContract) GetHistory(ctx contractapi.TransactionContextInterface,
 	}
 	return &history, nil
 }
+
+func (r *RosterContract) ModifyHistory(ctx contractapi.TransactionContextInterface, historyId, recordId, content, comment string) error {
+	history, err := r.GetHistory(ctx, historyId)
+	if err != nil {
+		return errors.WithMessage(err, "Get History fail")
+	}
+	rid, err := strconv.Atoi(recordId)
+	if err != nil {
+		return errors.WithMessage(err, "Parse record id fail")
+	}
+	if rid >= len(history.Records) {
+		return errors.WithMessage(err, "Record out of range")
+	}
+	history.Records[rid] = datatype.Record{
+		Id:      recordId,
+		Time:    time.Now(),
+		Content: content,
+		Comment: comment,
+	}
+	newBytes, err := json.Marshal(&history)
+	if err != nil {
+		return errors.WithMessage(err, "Marshal new history failed")
+	}
+	return ctx.GetStub().PutState(historyId, newBytes)
+
+}
