@@ -157,14 +157,18 @@ func (r *RosterContract) AddHistory(ctx contractapi.TransactionContextInterface,
 	return ctx.GetStub().PutState(historyId, newBytes)
 }
 
-func (r *RosterContract) GetHistory(ctx contractapi.TransactionContextInterface, historyId string) ([]datatype.Record, error) {
+func (r *RosterContract) GetHistory(ctx contractapi.TransactionContextInterface, historyId string) (*datatype.History, error) {
 	bytes, _ := ctx.GetStub().GetState(historyId)
-	if bytes == nil {
-		return nil, errors.New("History not exist")
-	}
 	var history datatype.History
+	if bytes == nil {
+		history = datatype.History{
+			Id:      historyId,
+			Records: []datatype.Record{},
+		}
+		return &history, nil
+	}
 	if err := json.Unmarshal(bytes, &history); err != nil {
 		return nil, errors.WithMessage(err, "Unmarshal history failed")
 	}
-	return history.Records, nil
+	return &history, nil
 }

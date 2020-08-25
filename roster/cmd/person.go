@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/pkg/errors"
 	"github.com/stephenwu2020/fabric-cases/roster/sdk"
 
 	"github.com/stephenwu2020/fabric-cases/roster/formater"
@@ -50,15 +51,9 @@ var personModifyCmd = &cobra.Command{
 	Short: "Modify person info",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Modify person with id:", argPersonId)
-		bytes, err := sdk.ChannelQuery("GetPersonById", argPersonId)
+		person, err := getPersonById(argPersonId)
 		if err != nil {
-			fmt.Println("Get Person fail")
-			return
-		}
-		person := &datatype.Person{}
-		if err := json.Unmarshal(bytes, person); err != nil {
-			fmt.Println("Unmarshal Person fail")
-			return
+			fmt.Println("Get Person fail", err)
 		}
 
 		fname := person.Name
@@ -146,4 +141,16 @@ func init() {
 	personSearchCmd.Flags().StringVarP(&argPersonName, "name", "n", "", "person name")
 	personSearchCmd.MarkFlagRequired("name")
 
+}
+
+func getPersonById(personId string) (*datatype.Person, error) {
+	bytes, err := sdk.ChannelQuery("GetPersonById", personId)
+	if err != nil {
+		return nil, errors.WithMessage(err, "Get person by id fail")
+	}
+	person := &datatype.Person{}
+	if err := json.Unmarshal(bytes, person); err != nil {
+		return nil, errors.WithMessage(err, "Unmarshal person fail")
+	}
+	return person, nil
 }
