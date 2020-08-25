@@ -92,7 +92,17 @@ func (r *RosterContract) ModifyPerson(ctx contractapi.TransactionContextInterfac
 }
 
 func (r *RosterContract) DelPerson(ctx contractapi.TransactionContextInterface, id string) error {
-	return ctx.GetStub().DelState(id)
+	person, err := r.GetPersonById(ctx, id)
+	if err != nil {
+		return errors.WithMessage(err, "Person not found")
+	}
+	if err := ctx.GetStub().DelState(id); err != nil {
+		return errors.WithMessage(err, "Delete person fail")
+	}
+	if err := ctx.GetStub().DelState(person.HistroyId); err != nil {
+		return errors.WithMessage(err, "Delete history fail")
+	}
+	return nil
 }
 
 func (r *RosterContract) SearchPerson(ctx contractapi.TransactionContextInterface, name string) ([]datatype.Person, error) {
