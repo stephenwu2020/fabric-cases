@@ -10,6 +10,12 @@ import (
 func main() {
 	fmt.Println("hi")
 	if err := sdk.Init(); err != nil {
-		log.Error("SDK init fail", err)
+		log.Fatal("SDK init fail", err)
 	}
+	args := [][]byte{}
+	rsp, err := sdk.ChannelQuery("Invoke", args)
+	if err != nil {
+		log.Fatal("Query fail", err)
+	}
+	log.Info(rsp.Payload)
 }
