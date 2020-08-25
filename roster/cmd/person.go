@@ -31,7 +31,9 @@ var personAddCmd = &cobra.Command{
 		fmt.Println("Add person with name:", argPersonName)
 		if _, err := sdk.ChannelExecute("AddPerson", argPersonName); err != nil {
 			fmt.Println("Add person error:", err)
+			return
 		}
+		fmt.Println("Add person success.")
 	},
 }
 
@@ -42,7 +44,9 @@ var personDelCmd = &cobra.Command{
 		fmt.Println("Delete person with id:", argPersonId)
 		if _, err := sdk.ChannelExecute("DelPerson", argPersonId); err != nil {
 			fmt.Println("Delete person fail", err)
+			return
 		}
+		fmt.Println("Delete person success.")
 	},
 }
 

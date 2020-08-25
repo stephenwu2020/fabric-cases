@@ -133,9 +133,12 @@ func (r *RosterContract) GetPersonById(ctx contractapi.TransactionContextInterfa
 	if err != nil {
 		return nil, errors.WithMessage(err, "Get person by id fail")
 	}
+	if bytes == nil {
+		return nil, errors.New("Person not found")
+	}
 	person := &datatype.Person{}
 	if err := json.Unmarshal(bytes, person); err != nil {
-		return nil, errors.WithMessage(err, "Marsha person fail")
+		return nil, errors.WithMessage(err, "UnMarsha person fail")
 	}
 	return person, nil
 }
