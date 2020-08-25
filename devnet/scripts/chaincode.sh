@@ -8,7 +8,8 @@ function package(){
   else
     echo "fetch go dependency"
     pushd ${CHAINCODE_PATH}
-    GO111MODULE=on go mod vendor
+    #GO111MODULE=on go mod vendor
+    GO111MODULE=on go mod tidy -v
     if [ ! $? -eq 0 ]; then
       echo "Fetch go dependency fail! Check your network please!"
       exit 1
