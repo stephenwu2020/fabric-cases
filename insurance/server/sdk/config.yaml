@@ -41,21 +41,6 @@ client:
      level: 256
 
 #
-# [Optional]. But most apps would have this section so that channel objects can be constructed
-# based on the content below. If an app is creating channels, then it likely will not need this
-# section.
-#
-channels:
-  # Mychannel overrides initialBackoff for discovery
-  c1:
-    peers:
-      peer0.org1.develop.com:
-        endorsingPeer: true
-        chaincodeQuery: true
-        ledgerQuery: true
-        eventSource: true
-
-#
 # list of participating organizations in this network
 #
 organizations:

@@ -7,6 +7,10 @@ import (
 	"github.com/stephenwu2020/fabric-cases/insurance/server/sdk"
 )
 
+func init() {
+	log.SetLevel(log.DebugLevel)
+}
+
 func main() {
 	fmt.Println("hi")
 	if err := sdk.Init(); err != nil {
@@ -15,7 +19,7 @@ func main() {
 	args := [][]byte{}
 	rsp, err := sdk.ChannelQuery("Invoke", args)
 	if err != nil {
-		log.Fatal("Query fail", err)
+		log.Fatal("Query fail:", err)
 	}
 	log.Info(rsp.Payload)
 }

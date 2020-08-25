@@ -4,6 +4,7 @@ import (
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
 	"github.com/hyperledger/fabric-sdk-go/pkg/core/config"
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
+	"github.com/pkg/errors"
 )
 
 // settings
@@ -14,7 +15,7 @@ var (
 	Org           = "Org1"                   // org name
 	User          = "Admin"                  // user
 	ConfigPath    = "sdk/config.yaml"        // config
-	EndPoint      = "peer0.org1.example.com" // client endpoint
+	EndPoint      = "peer0.org1.develop.com" // client endpoint
 )
 
 // Init fabric sdk
@@ -30,7 +31,7 @@ func ChannelExecute(fcn string, args [][]byte) (channel.Response, error) {
 	ctx := SDK.ChannelContext(ChannelName, fabsdk.WithOrg(Org), fabsdk.WithUser(User))
 	cli, err := channel.New(ctx)
 	if err != nil {
-		return channel.Response{}, err
+		return channel.Response{}, errors.WithMessage(err, "Create channel fail")
 	}
 	// call invoke method
 	resp, err := cli.Execute(channel.Request{
@@ -50,7 +51,7 @@ func ChannelQuery(fcn string, args [][]byte) (channel.Response, error) {
 	ctx := SDK.ChannelContext(ChannelName, fabsdk.WithOrg(Org), fabsdk.WithUser(User))
 	cli, err := channel.New(ctx)
 	if err != nil {
-		return channel.Response{}, err
+		return channel.Response{}, errors.WithMessage(err, "Create channel fail")
 	}
 	// call invoke
 	resp, err := cli.Query(channel.Request{
