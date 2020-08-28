@@ -1,6 +1,6 @@
 CHAINCODE_PATH=/opt/gopath/src/github.com/hyperledger/chaincode/health
 CHAINCODE_LABEL=health
-CHAINCODE_INVOKE_OPTION=""
+CHAINCODE_INVOKE_OPTION='{"Args":["Intro"]}'
 CHAINCODE_QUERY_OPTION=""
 
 .PHONY: new

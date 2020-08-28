@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 
 	"github.com/stephenwu2020/fabric-cases/chaincode/health/datatype"
 	"github.com/stephenwu2020/fabric-cases/sdk"
@@ -10,15 +10,16 @@ import (
 
 func main() {
 	if err := sdk.Init(); err != nil {
-		log.Fatal("Init sdk failed", err)
+		panic(err)
 	}
 	bytes, err := sdk.ChannelQuery("Intro")
 	if err != nil {
-		log.Fatal("Call Intro failed", err)
+		panic(err)
 	}
 	var intro datatype.HealthIntro
+
 	if err := json.Unmarshal(bytes, &intro); err != nil {
-		log.Fatal("Marshal Intro failed", err)
+		panic(err)
 	}
-	log.Printf("Health Intro: %+v", intro)
+	fmt.Printf("Health Intro: %+v\n", intro)
 }
