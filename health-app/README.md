@@ -80,18 +80,76 @@ Health Intro: {Name:Health Function:Record health data, analyse health situation
 首先，定义记录睡眠状况的结构体:
 ```
 const (
-	AtNoon = iota
-	AtNight
+	SleepAtNoon = iota
+	SleepAtNight
 )
 
-type SleepType int
-
-type Sleep struct {
-	Type  SleepType
-	Start time.Time
-	End   time.Time
+type HealthRecord struct {
+	Type  int
+	Start int64
+	End   int64
 }
 ```
 睡眠的类型分为两种：午睡和晚睡。另外，记录开始时间和结束时间
 
+chaincode定义添加记录AddSleepRecord的方法:
+```
+func (h Health) AddSleepRecord(ctx contractapi.TransactionContextInterface, sleepT int, start, end int64) error {
+	record := datatype.HealthRecord{
+		Type:  sleepT,
+		Start: start,
+		End:   end,
+	}
+	records, err := h.GetRecords(ctx)
+	if err != nil {
+		return errors.WithMessage(err, "Get records failed")
+	}
+	records = append(records, record)
+	bytes, err := json.Marshal(&records)
+	if err != nil {
+		return errors.WithMessage(err, "Marshal recrds failed")
+	}
+	return ctx.GetStub().PutState(recordkey, bytes)
+}
+```
+方法将新的记录添加到旧的记录列表里，ctx提供了访问状态数据库的接口:
+```
+ctx.GetStub().GetState()
+ctx.GetStub().PutState()
+```
+在应用程序中调用:
+```
+	// Add record
+	start := time.Now()
+	end := start.Add(time.Hour)
+	_, err = sdk.ChannelExecute(
+		"AddSleepRecord",
+		tobytes(datatype.SleepAtNoon),
+		tobytes(start.Unix()),
+		tobytes(end.Unix()),
+	)
+	if err != nil {
+		panic(err)
+	}
 
+	// Get Records
+	bytes, err = sdk.ChannelQuery("GetRecords")
+	if err != nil {
+		panic(err)
+	}
+	var records []datatype.HealthRecord
+	if err := json.Unmarshal(bytes, &records); err != nil {
+		panic(err)
+	}
+	for _, r := range records {
+		fmt.Printf("%+v\n", r)
+	}
+```
+输出结果为:
+```
+$ go run .
+Health Intro: {Name:Health Function:Record health data, analyse health situation. Version:0.0.1 Author:Ming}
+{Type:0 Start:1598600548 End:1598604148}
+{Type:0 Start:1598600831 End:1598604431}
+```
+到此，睡眠记录添加成功，查询成功
