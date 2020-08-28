@@ -29,10 +29,10 @@ func main() {
 
 	// Add record
 	start := time.Now()
-	end := start.Add(time.Hour)
+	end := start.Add(time.Hour * 7)
 	_, err = sdk.ChannelExecute(
 		"AddSleepRecord",
-		tobytes(datatype.SleepAtNoon),
+		tobytes(datatype.SleepAtNight),
 		tobytes(start.Unix()),
 		tobytes(end.Unix()),
 	)
@@ -53,9 +53,45 @@ func main() {
 		fmt.Printf("%+v\n", r)
 	}
 
+	// Report
+	report(records)
 }
 
 func tobytes(v interface{}) []byte {
 	res, _ := json.Marshal(v)
 	return res
+}
+
+func isHealth(record *datatype.HealthRecord) bool {
+	health := false
+	diff := record.End - record.Start
+	hour := int64(time.Hour.Seconds())
+	switch record.Type {
+	case datatype.SleepAtNoon:
+		if diff >= hour/2 && diff <= hour {
+			health = true
+		}
+	case datatype.SleepAtNight:
+		if diff >= hour*6 && diff <= hour*8 {
+			health = true
+		}
+	}
+	return health
+}
+
+func report(records []datatype.HealthRecord) {
+	total := len(records)
+	if total == 0 {
+		fmt.Println("No record, No Report!")
+		return
+	}
+
+	healthNum := 0
+	for _, r := range records {
+		if isHealth(&r) {
+			healthNum++
+		}
+	}
+	ratio := float64(healthNum) / float64(total)
+	fmt.Printf("Health ratio: %0.2f %%\n", ratio)
 }
