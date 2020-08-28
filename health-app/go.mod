@@ -3,7 +3,7 @@ module github.com/stephenwu2020/fabric-cases/health-app
 go 1.14
 
 require (
-	github.com/stephenwu2020/fabric-cases/chaincode/health v0.0.0-20200828071555-1a6418629b5d
+	github.com/stephenwu2020/fabric-cases/chaincode/health v0.0.0-20200828074027-22005c4bdba9
 	github.com/stephenwu2020/fabric-cases/sdk v0.0.0-20200827112016-065f289ff96a
 )
 
