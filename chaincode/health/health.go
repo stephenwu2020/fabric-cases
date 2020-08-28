@@ -24,7 +24,7 @@ func (h Health) Intro(ctx contractapi.TransactionContextInterface) (*datatype.He
 	return intro, nil
 }
 
-func (h Health) AddSleepRecord(ctx contractapi.TransactionContextInterface, sleepT datatype.RecordType, start, end int64) error {
+func (h Health) AddSleepRecord(ctx contractapi.TransactionContextInterface, sleepT int, start, end int64) error {
 	record := datatype.HealthRecord{
 		Type:  sleepT,
 		Start: start,

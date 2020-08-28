@@ -1,14 +1,12 @@
 package datatype
 
-type RecordType int
-
 const (
 	SleepAtNoon = iota
 	SleepAtNight
 )
 
 type HealthRecord struct {
-	Type  RecordType
+	Type  int
 	Start int64
 	End   int64
 }
