@@ -13,6 +13,7 @@ function clean(){
   rm -rf data
 }
 
+# create the three system databases manually
 function setup(){
   curl localhost:5984
   curl -X PUT http://admin:password@localhost:5984/_users
