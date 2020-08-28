@@ -153,3 +153,57 @@ Health Intro: {Name:Health Function:Record health data, analyse health situation
 {Type:0 Start:1598600831 End:1598604431}
 ```
 到此，睡眠记录添加成功，查询成功
+
+## 健康评估
+午睡半小时至1小时，晚睡6小时至8小时，这样的睡眠是健康的
+```
+func isHealth(record *datatype.HealthRecord) bool {
+	health := false
+	diff := record.End - record.Start
+	hour := int64(time.Hour.Seconds())
+	switch record.Type {
+	case datatype.SleepAtNoon:
+		if diff >= hour/2 && diff <= hour {
+			health = true
+		}
+	case datatype.SleepAtNight:
+		if diff >= hour*6 && diff <= hour*8 {
+			health = true
+		}
+	}
+	return health
+}
+```
+于是，可以读取所有记录，计算健康比率，生成健康报告:
+```
+func report(records []datatype.HealthRecord) {
+	total := len(records)
+	if total == 0 {
+		fmt.Println("No record, No Report!")
+		return
+	}
+
+	healthNum := 0
+	for _, r := range records {
+		if isHealth(&r) {
+			healthNum++
+		}
+	}
+	ratio := float64(healthNum) / float64(total)
+	fmt.Printf("Health ratio: %0.2f %%\n", ratio)
+}
+```
+应用程序执行结果:
+```
+$ go run .
+Health Intro: {Name:Health Function:Record health data, analyse health situation. Version:0.0.1 Author:Ming}
+{Type:0 Start:1598600548 End:1598604148}
+{Type:0 Start:1598600831 End:1598604431}
+{Type:0 Start:1598600874 End:1598604474}
+{Type:0 Start:1598602389 End:1598605989}
+{Type:1 Start:1598602428 End:1598606028}
+{Type:1 Start:1598602478 End:1598606078}
+{Type:1 Start:1598602804 End:1598606404}
+{Type:1 Start:1598602839 End:1598628039}
+Health ratio: 0.62 %
+```
