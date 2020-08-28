@@ -1,4 +1,4 @@
-package health
+package datatype
 
 import "github.com/hyperledger/fabric-contract-api-go/contractapi"
 

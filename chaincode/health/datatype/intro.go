@@ -1,4 +1,4 @@
-package health
+package datatype
 
 type HealthIntro struct {
 	Name     string

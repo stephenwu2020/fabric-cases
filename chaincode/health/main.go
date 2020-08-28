@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"github.com/stephenwu2020/fabric-cases/chaincode/health/datatype"
 )
 
 func main() {
