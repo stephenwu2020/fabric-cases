@@ -73,3 +73,25 @@ $ go run .
 Health Intro: {Name:Health Function:Record health data, analyse health situation. Version:0.0.1 Author:Ming}
 ```
 好了，第一个函数完成！
+
+## 随眠记录
+睡眠的质量对人的影响是非常巨大的。良好的睡眠，使人精力充沛、充满活力。小明决定将睡眠纳入健康考核。
+
+首先，定义记录睡眠状况的结构体:
+```
+const (
+	AtNoon = iota
+	AtNight
+)
+
+type SleepType int
+
+type Sleep struct {
+	Type  SleepType
+	Start time.Time
+	End   time.Time
+}
+```
+睡眠的类型分为两种：午睡和晚睡。另外，记录开始时间和结束时间
+
+

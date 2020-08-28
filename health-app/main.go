@@ -9,9 +9,12 @@ import (
 )
 
 func main() {
+	// Init
 	if err := sdk.Init(); err != nil {
 		panic(err)
 	}
+
+	// Intro
 	bytes, err := sdk.ChannelQuery("Intro")
 	if err != nil {
 		panic(err)
@@ -22,4 +25,15 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Health Intro: %+v\n", intro)
+
+	// Add record
+	bytes, err := sdk.ChannelExecute(
+		"AddSleepRecord",
+		tobytes(datatype.SleepAtNoon),
+	)
+}
+
+func tobytes(v interface{}) []byte {
+	res, _ := json.Marshal(v)
+	return res
 }
