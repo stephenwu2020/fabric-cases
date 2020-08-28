@@ -16,7 +16,7 @@ function package(){
     fi
     popd
 
-    echo "package chaincode"
+    echo "Package chaincode..."
     peer lifecycle chaincode package ${CHAINCODE_NAME}.tar.gz \
       --path ${CHAINCODE_PATH} \
       --lang golang \
@@ -27,6 +27,7 @@ function package(){
 }
 
 function install(){
+  echo "Install chaincode..."
   GO111MODULE=on
 
   # install on peer of r1
@@ -39,6 +40,7 @@ function install(){
 }
 
 function approve(){
+  echo "Approve chaincode..."
   # query
   peer lifecycle chaincode queryinstalled >&log.txt
   cat log.txt
@@ -74,6 +76,7 @@ function beforeCommit(){
 }
 
 function commit(){
+  echo "Commit chaincode..."
   peer lifecycle chaincode commit \
     -o orderer.develop.com:7050 \
     --channelID $CHANNEL_NAME \
@@ -92,6 +95,11 @@ function queryCommit(){
 }
 
 function invoke(){
+  echo "Invoke chaincode..."
+  if [ -z ${CHAINCODE_INVOKE_OPTIONS} ]; then
+    echo "skip..."
+    return
+  fi
   peer chaincode invoke \
     -o orderer.develop.com:7050 \
     --isInit \
@@ -106,6 +114,11 @@ function invoke(){
 }
 
 function query(){
+  echo "Query chaincode..."
+  if [ -z ${CHAINCODE_QUERY_OPTIONS} ]; then
+    echo "skip..."
+    return
+  fi
   peer chaincode query -C $CHANNEL_NAME -n ${CHAINCODE_NAME} -c ${CHAINCODE_QUERY_OPTIONS}
 }
 
