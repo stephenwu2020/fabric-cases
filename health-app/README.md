@@ -38,3 +38,38 @@ func main() {
 
 ## 介绍函数
 小明写的第一个函数，是介绍这款应用的功能:
+```
+func (h Health) Intro(ctx contractapi.TransactionContextInterface) (*HealthIntro, error) {
+	intro := &HealthIntro{
+		Name:     "Health",
+		Function: "Record health data, analyse health situation.",
+		Version:  "0.0.1",
+		Author:   "Ming",
+	}
+	return intro, nil
+}
+```
+供应用程序调用的方法，需要接收类型contractapi.TransactionContextInterface的参数。在health-app应用程序中，调用该函数:
+```
+func main() {
+	if err := sdk.Init(); err != nil {
+		panic(err)
+	}
+	bytes, err := sdk.ChannelQuery("Intro")
+	if err != nil {
+		panic(err)
+	}
+	var intro datatype.HealthIntro
+
+	if err := json.Unmarshal(bytes, &intro); err != nil {
+		panic(err)
+	}
+	fmt.Printf("Health Intro: %+v\n", intro)
+}
+```
+调用成功，看到返回的结果是:
+```
+$ go run .
+Health Intro: {Name:Health Function:Record health data, analyse health situation. Version:0.0.1 Author:Ming}
+```
+好了，第一个函数完成！
