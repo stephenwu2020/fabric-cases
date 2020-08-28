@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 	"github.com/pkg/errors"
@@ -25,7 +24,7 @@ func (h Health) Intro(ctx contractapi.TransactionContextInterface) (*datatype.He
 	return intro, nil
 }
 
-func (h Health) AddSleepRecord(ctx contractapi.TransactionContextInterface, sleepT datatype.RecordType, start, end time.Time) error {
+func (h Health) AddSleepRecord(ctx contractapi.TransactionContextInterface, sleepT datatype.RecordType, start, end int64) error {
 	record := datatype.HealthRecord{
 		Type:  sleepT,
 		Start: start,

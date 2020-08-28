@@ -1,7 +1,5 @@
 package datatype
 
-import "time"
-
 type RecordType int
 
 const (
@@ -11,6 +9,6 @@ const (
 
 type HealthRecord struct {
 	Type  RecordType
-	Start time.Time
-	End   time.Time
+	Start int64
+	End   int64
 }
