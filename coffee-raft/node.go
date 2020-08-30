@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"net"
 	"os"
@@ -85,14 +84,6 @@ func (cf *CoffeeCluster) CreateRaftNode(coffeeNode *CoffeeNode, runCluster bool)
 	return raftNode, nil
 }
 
-func (cf *CoffeeCluster) ListRaftNodes() {
-	for _, node := range cf.CoffeeNodes {
-		if node.RaftNode != nil {
-			fmt.Printf("%s\n", node.RaftNode)
-		}
-	}
-}
-
 func (cf *CoffeeCluster) GetLeader() *CoffeeNode {
 	var target *CoffeeNode
 	for _, rn := range cf.CoffeeNodes {
@@ -157,7 +148,7 @@ func (cf *CoffeeCluster) Get() (string, error) {
 	}
 	val, ok := leader.FSM.m[key]
 	if !ok {
-		return "", errors.New("Key not founds")
+		return "", errors.New("Value not set")
 	}
 	return val, nil
 }

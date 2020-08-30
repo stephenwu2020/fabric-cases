@@ -12,7 +12,7 @@ func main() {
 
 	// Clean all files
 	os.RemoveAll(cluster.RootDir)
-	time.Sleep(3 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	// Start Ming's raft node, and boostrap cluser
 	_, err := cluster.CreateRaftNode(cluster.CoffeeNodes[0], true)

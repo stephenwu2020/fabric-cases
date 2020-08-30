@@ -8,14 +8,20 @@ import (
 )
 
 func help() {
-	fmt.Println("\n*What's your request?")
+	fmt.Println("\n* What's your request?")
 	fmt.Println("  - list: list all raft nodes")
 	fmt.Println("  - boot: bootstrap a new raft nodes")
 	fmt.Println("  - transfer: leader ship transfer, vote for new candidate")
 	fmt.Println("  - set:  set random value")
 	fmt.Println("  - get:  get value")
-	fmt.Println("  - down: leader down")
+	fmt.Println("  - down: bring down leader node")
 	fmt.Println("  - quit: quit")
+}
+
+func output(a ...interface{}) {
+	fmt.Println("Output:")
+	fmt.Print("  ")
+	fmt.Println(a...)
 }
 
 func ReadInput(cluster *CoffeeCluster) {
@@ -27,44 +33,54 @@ func ReadInput(cluster *CoffeeCluster) {
 		if err != nil {
 			log.Fatal("Read user input fail", err)
 		}
-		fmt.Println()
 		switch input {
 		case "list":
-			cluster.ListRaftNodes()
+			fmt.Println("Output:")
+			for _, node := range cluster.CoffeeNodes {
+				if node.RaftNode != nil {
+					fmt.Println("  ", node.RaftNode)
+				}
+			}
 		case "quit":
-			fmt.Println("Bye!")
+			output("Bye")
 			os.Exit(0)
 		case "boot":
-			fmt.Println("Boostrap a new raft node...")
-			if err := cluster.BootCaffeeNode(); err != nil {
-				log.Println("Bootstrap raft node failed", err)
+			err := cluster.BootCaffeeNode()
+			time.Sleep(3 * time.Second)
+			if err != nil {
+				output("Boot raft node failed", err)
 			}
+			output("Boot success")
 		case "transfer":
-			if err := cluster.Transfer(); err == nil {
-				log.Println("transfer success")
+			if err := cluster.Transfer(); err != nil {
+				output("Transfer leadership fail", err)
+			} else {
+				output("Transfer leadership success")
 			}
 		case "set":
 			if err := cluster.Set(); err != nil {
-				log.Println(err)
+				output("Set value fail", err)
 			} else {
-				log.Println("Value has been set")
+				output("Set value success")
 			}
 		case "get":
 			val, err := cluster.Get()
 			if err != nil {
-				log.Println(err)
+				output("Get value fail", err)
 			} else {
-				log.Println("Value is", val)
+				output("Value is:", val)
 			}
 		case "down":
-			if err := cluster.LeaderDown(); err != nil {
-				log.Println(err)
+			err := cluster.LeaderDown()
+			time.Sleep(3 * time.Second)
+			if err != nil {
+				output("Bring down leader fail", err)
 			} else {
-				log.Println("Leader has been shutdown")
+				output("Bring down leader success")
 			}
 		default:
-			fmt.Println("No such service, guy!")
+			output("Not such service, guy!")
 		}
-		time.Sleep(3 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }
