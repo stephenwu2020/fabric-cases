@@ -161,3 +161,12 @@ func (cf *CoffeeCluster) Get() (string, error) {
 	}
 	return val, nil
 }
+
+func (cf *CoffeeCluster) Transfer() error {
+	leader := cf.GetLeader()
+	if leader == nil {
+		return errors.New("Leader not found")
+	}
+	f := leader.RaftNode.LeadershipTransfer()
+	return f.Error()
+}
