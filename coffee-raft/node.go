@@ -82,3 +82,35 @@ func (cf *CoffeeCluster) ListRaftNodes() {
 		fmt.Printf("%s\n", r)
 	}
 }
+
+func (cf *CoffeeCluster) GetLeader() *raft.Raft {
+	var target *raft.Raft
+	for _, rn := range cf.RaftNodes {
+		if rn.State() == raft.Leader {
+			target = rn
+			break
+		}
+	}
+	return target
+}
+
+func (cf *CoffeeCluster) BootCaffeeNode() error {
+	index := len(cf.RaftNodes)
+	if index >= len(cf.CoffeeNodes) {
+		return errors.New("Max limit")
+	}
+	node := cf.CoffeeNodes[index]
+	_, err := cf.CreateRaftNode(&node, false)
+	if err != nil {
+		return errors.WithMessage(err, "Create raft node failed")
+	}
+	leader := cf.GetLeader()
+	if leader == nil {
+		return errors.New("Leader not found")
+	}
+	f := leader.AddVoter(raft.ServerID(node.ID), raft.ServerAddress(node.Bind), 0, 0)
+	if f.Error() != nil {
+		return errors.WithMessage(f.Error(), "Add voter fail")
+	}
+	return nil
+}

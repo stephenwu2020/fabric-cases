@@ -10,6 +10,7 @@ import (
 func help() {
 	fmt.Println("\n*What's your request?")
 	fmt.Println("  - list: list all raft nodes")
+	fmt.Println("  - boot: bootstrap a new raft nodes")
 	fmt.Println("  - quit: quit")
 }
 
@@ -29,6 +30,11 @@ func ReadInput(cluster *CoffeeCluster) {
 		case "quit":
 			fmt.Println("Bye!")
 			os.Exit(0)
+		case "boot":
+			fmt.Println("Boostrap a new raft node...")
+			if err := cluster.BootCaffeeNode(); err != nil {
+				log.Println("Bootstrap raft node failed", err)
+			}
 		default:
 			fmt.Println("No such service, guy!")
 		}
