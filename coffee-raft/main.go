@@ -15,7 +15,7 @@ func main() {
 	time.Sleep(3 * time.Second)
 
 	// Start Ming's raft node, and boostrap cluser
-	_, err := cluster.CreateRaftNode(&cluster.CoffeeNodes[0], true)
+	_, err := cluster.CreateRaftNode(cluster.CoffeeNodes[0], true)
 	if err != nil {
 		log.Fatal(err)
 	}

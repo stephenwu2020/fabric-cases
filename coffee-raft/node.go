@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
 	"path/filepath"
@@ -13,19 +14,19 @@ import (
 )
 
 type CoffeeNode struct {
-	ID   string
-	Bind string
-	Dir  string
+	ID       string
+	Bind     string
+	Dir      string
+	raftNode *raft.Raft
 }
 
 type CoffeeCluster struct {
 	RootDir     string
-	CoffeeNodes []CoffeeNode
-	RaftNodes   []*raft.Raft
+	CoffeeNodes []*CoffeeNode
 }
 
 func NewCoffeeCluster() *CoffeeCluster {
-	nodes := []CoffeeNode{
+	nodes := []*CoffeeNode{
 		{ID: "ming", Bind: ":11000", Dir: "./nodes/ming"},
 		{ID: "hong", Bind: ":11001", Dir: "./nodes/hong"},
 		{ID: "peng", Bind: ":11002", Dir: "./nodes/peng"},
@@ -35,12 +36,13 @@ func NewCoffeeCluster() *CoffeeCluster {
 	return &CoffeeCluster{
 		RootDir:     "./nodes",
 		CoffeeNodes: nodes,
-		RaftNodes:   []*raft.Raft{},
 	}
+
 }
 
 func (cf *CoffeeCluster) CreateRaftNode(coffeeNode *CoffeeNode, runCluster bool) (*raft.Raft, error) {
 	config := raft.DefaultConfig()
+	config.LogLevel = "info"
 	config.LocalID = raft.ServerID(coffeeNode.ID)
 	addr, err := net.ResolveTCPAddr("tcp", coffeeNode.Bind)
 	if err != nil {
@@ -63,6 +65,7 @@ func (cf *CoffeeCluster) CreateRaftNode(coffeeNode *CoffeeNode, runCluster bool)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Create raft nodefail")
 	}
+	coffeeNode.raftNode = raftNode
 
 	if runCluster {
 		configuration := raft.Configuration{
@@ -73,20 +76,21 @@ func (cf *CoffeeCluster) CreateRaftNode(coffeeNode *CoffeeNode, runCluster bool)
 			return nil, errors.WithMessage(cluster.Error(), "Create cluster failed")
 		}
 	}
-	cf.RaftNodes = append(cf.RaftNodes, raftNode)
 	return raftNode, nil
 }
 
 func (cf *CoffeeCluster) ListRaftNodes() {
-	for _, r := range cf.RaftNodes {
-		fmt.Printf("%s\n", r)
+	for _, node := range cf.CoffeeNodes {
+		if node.raftNode != nil {
+			fmt.Printf("%s\n", node.raftNode)
+		}
 	}
 }
 
-func (cf *CoffeeCluster) GetLeader() *raft.Raft {
-	var target *raft.Raft
-	for _, rn := range cf.RaftNodes {
-		if rn.State() == raft.Leader {
+func (cf *CoffeeCluster) GetLeader() *CoffeeNode {
+	var target *CoffeeNode
+	for _, rn := range cf.CoffeeNodes {
+		if rn.raftNode != nil && rn.raftNode.State() == raft.Leader {
 			target = rn
 			break
 		}
@@ -95,12 +99,19 @@ func (cf *CoffeeCluster) GetLeader() *raft.Raft {
 }
 
 func (cf *CoffeeCluster) BootCaffeeNode() error {
-	index := len(cf.RaftNodes)
-	if index >= len(cf.CoffeeNodes) {
-		return errors.New("Max limit")
+	var target *CoffeeNode
+	for _, node := range cf.CoffeeNodes {
+		if node.raftNode == nil {
+			target = node
+			break
+		}
 	}
-	node := cf.CoffeeNodes[index]
-	_, err := cf.CreateRaftNode(&node, false)
+	if target == nil {
+		return errors.New("Reach max limit")
+	}
+
+	raftNote, err := cf.CreateRaftNode(target, false)
+	target.raftNode = raftNote
 	if err != nil {
 		return errors.WithMessage(err, "Create raft node failed")
 	}
@@ -108,9 +119,28 @@ func (cf *CoffeeCluster) BootCaffeeNode() error {
 	if leader == nil {
 		return errors.New("Leader not found")
 	}
-	f := leader.AddVoter(raft.ServerID(node.ID), raft.ServerAddress(node.Bind), 0, 0)
+	f := leader.raftNode.AddVoter(raft.ServerID(target.ID), raft.ServerAddress(target.Bind), 0, 0)
 	if f.Error() != nil {
 		return errors.WithMessage(f.Error(), "Add voter fail")
 	}
 	return nil
+}
+
+func (cf *CoffeeCluster) RandomShutdownRaftNode() {
+	amout := len(cf.CoffeeNodes)
+	for {
+		r := rand.Intn(amout)
+		raftNode := cf.CoffeeNodes[r].raftNode
+		if raftNode != nil {
+			raftNode.Shutdown()
+			break
+		}
+	}
+}
+
+func (cf *CoffeeCluster) ShutdownLeader() {
+	leader := cf.GetLeader()
+	if leader.raftNode != nil {
+		leader.raftNode.Shutdown()
+	}
 }
