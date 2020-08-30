@@ -14,6 +14,7 @@ func help() {
 	fmt.Println("  - transfer: leader ship transfer, vote for new candidate")
 	fmt.Println("  - set:  set random value")
 	fmt.Println("  - get:  get value")
+	fmt.Println("  - down: leader down")
 	fmt.Println("  - quit: quit")
 }
 
@@ -54,6 +55,12 @@ func ReadInput(cluster *CoffeeCluster) {
 				log.Println(err)
 			} else {
 				log.Println("Value is", val)
+			}
+		case "down":
+			if err := cluster.LeaderDown(); err != nil {
+				log.Println(err)
+			} else {
+				log.Println("Leader has been shutdown")
 			}
 		default:
 			fmt.Println("No such service, guy!")

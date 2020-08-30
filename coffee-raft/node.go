@@ -170,3 +170,12 @@ func (cf *CoffeeCluster) Transfer() error {
 	f := leader.RaftNode.LeadershipTransfer()
 	return f.Error()
 }
+
+func (cf *CoffeeCluster) LeaderDown() error {
+	leader := cf.GetLeader()
+	if leader == nil {
+		return errors.New("Key not founds")
+	}
+	f := leader.RaftNode.RemoveServer(raft.ServerID(leader.ID), 0, 0)
+	return f.Error()
+}
