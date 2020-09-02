@@ -1,0 +1,9 @@
+{
+	"network-configs": {
+		"devnet": {
+			"name": "devnet",
+			"profile": "./connection-profile/devnet.json"
+		}
+	},
+	"license": "Apache-2.0"
+}
