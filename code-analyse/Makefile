@@ -27,3 +27,8 @@ commit:
 .PHONY: listener
 listener:
 	@lsof -nP  | grep LISTEN
+
+.PHONY: peer
+peer: 
+	../bin/peer node start
+	
