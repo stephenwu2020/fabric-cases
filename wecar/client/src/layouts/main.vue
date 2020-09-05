@@ -30,6 +30,7 @@ export default {
   padding: 0;
 }
 .el-main{
+  padding: 0;
   margin-top: 60px;
   min-height: 85vh;
 }
