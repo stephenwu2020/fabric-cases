@@ -26,6 +26,7 @@ export default {
 <style scoped>
 .el-header{
   position: fixed;
+  z-index: 999;
   width: 100%;
   padding: 0;
 }
