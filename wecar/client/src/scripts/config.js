@@ -81,6 +81,26 @@ const carList = [
   },
 ]
 
+const carOwner = {
+  h_1: [
+    { id: 1, time: "2010-12-8", from: "", to: "陈先生" },
+    { id: 2, time: "2019-12-8", from: "陈先生", to: "罗女士" }
+  ],
+  h_2: [
+    { id: 1, time: "2005-12-8", from: "", to: "马先生" },
+    { id: 2, time: "2019-12-8", from: "马先生", to: "姚女士" }
+  ]
+}
+
+const carRepair = {
+  r_1: [
+    { id: 1, time: "2010-5-23", factory: "大平汽修", detail: "修理车灯" },
+    { id: 2, time: "2010-8-23", factory: "云海汽修", detail: "汽车保养" },
+  ]
+}
+
 module.exports = {
-  carList
+  carList,
+  carOwner,
+  carRepair,
 }

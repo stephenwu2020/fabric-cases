@@ -18,16 +18,18 @@
         class="shop-expand"
         :class="expandId == item.id ? '' : 'shop-expand--hide'"
       >
-        expand
+        <Expand />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Expand from "@/components/Expend.vue"
 import config from "@/scripts/config.js";
 export default {
   layout: "main",
+  components: {Expand},
   data() {
     return {
       expandId: "",
