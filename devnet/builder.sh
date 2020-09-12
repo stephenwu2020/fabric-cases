@@ -14,6 +14,7 @@ function help(){
   echo "  - network"
   echo "  - channel"
   echo "  - chaincode"
+  echo "  - modify"
 }
 
 # check binary
@@ -35,6 +36,10 @@ case "$MODE" in
   "chaincode")
     shift
     docker exec cli scripts/chaincode.sh "$@"
+    ;;
+  "modify")
+    shift
+    docker exec cli scripts/modify.sh "$@"
     ;;
   "new")
     ./builder.sh network default

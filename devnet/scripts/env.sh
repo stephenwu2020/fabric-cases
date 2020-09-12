@@ -21,6 +21,7 @@ FABRIC_CFG_PATH="/etc/hyperledger/fabric"
 
 # orderer variables, used in cli container
 ORDERER_TLS_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/develop.com/orderers/orderer.develop.com/msp/tlscacerts/tlsca.develop.com-cert.pem
+ORDERER_MSP=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/develop.com/users/Admin@develop.com/msp/
 
 # peer variables, used in cli container
 PEER_MSP=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.develop.com/users/Admin@org1.develop.com/msp
