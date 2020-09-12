@@ -2,9 +2,11 @@ package v3
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/stephenwu2020/fabric-cases/web-app/server/pkg/app"
 	"github.com/stephenwu2020/fabric-cases/web-app/server/sdk"
 )
@@ -75,6 +77,7 @@ func CreateCar(ctx *gin.Context) {
 
 	_, err := sdk.ChannelExecute("createCar", body.Make, body.Model, body.Colour, body.Owner)
 	if err != nil {
+		log.Println(errors.WithMessage(err, "create car failed."))
 		appGin.Response(http.StatusInternalServerError, "fail", err.Error())
 		return
 	}
